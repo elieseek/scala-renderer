@@ -2,8 +2,11 @@ package Renderer
 
 import java.awt.image.BufferedImage
 import scala.math.abs
+import scala.math.max
+import scala.math.min
 
 import Display.Image
+import java.awt.Color
 
 object Draw {
   def line(x0: Int, y0: Int, x1: Int, y1: Int, image: BufferedImage, colour: Array[Int]) {
@@ -46,6 +49,25 @@ object Draw {
         error -= dx*2
       }
     }
-
+  }
+  def triangle(pts: Array[Array[Int]], image: BufferedImage, colour: Array[Int]) = {
+    var bboxMin = Array(image.getWidth()-1, image.getHeight()-1)
+    var bboxMax = Array(0,0)
+    var clamp = Array(image.getWidth()-1, image.getHeight()-1)
+    for (i <- 0 until 3) {
+      for (j <- 0 until 2) {
+        bboxMin(j) = max(0, min(bboxMin(j), pts(i)(j)))
+        bboxMax(j) = min(clamp(j), max(bboxMax(j), pts(i)(j)))
+      }
+    }
+    // p: Array[Int] = (x,y)
+    for (x <- bboxMin(0) to bboxMax(0)) {
+      for (y <- bboxMin(1) to bboxMax(1)) {
+        val bcScreen = Compute.barycentric(pts, Array(x, y))
+        if (bcScreen(0)>=0 && bcScreen(1)>=0 && bcScreen(2)>=0 ) {
+          Image.writePixel(image, x, y, colour)
+        }
+      }
+    }
   }
 }

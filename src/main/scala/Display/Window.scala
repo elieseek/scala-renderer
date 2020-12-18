@@ -23,6 +23,13 @@ class Window(width: Int, height: Int) extends MainFrame {
           Timer(1000) {this.text = "Save as PNG!" }
       }
     }
+    contents += new Button {
+      text = "Close"
+      reactions += {
+        case event.ButtonClicked(_) =>
+          System.exit(0)
+      }
+    }
   }
 
   val layout = new FlowPanel {

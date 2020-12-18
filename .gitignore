@@ -1,7 +1,8 @@
 target/
-
+*.png
 # IDE
 .vscode
 .metals
 metals.sbt
 .bloop
+.bsp

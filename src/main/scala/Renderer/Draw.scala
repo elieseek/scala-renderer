@@ -50,14 +50,14 @@ object Draw {
       }
     }
   }
-  def triangle(pts: Array[Array[Int]], image: BufferedImage, colour: Array[Int]) = {
+  def triangle(pts: Array[Array[Double]], image: BufferedImage, colour: Array[Int]) = {
     var bboxMin = Array(image.getWidth()-1, image.getHeight()-1)
     var bboxMax = Array(0,0)
     var clamp = Array(image.getWidth()-1, image.getHeight()-1)
     for (i <- 0 until 3) {
       for (j <- 0 until 2) {
-        bboxMin(j) = max(0, min(bboxMin(j), pts(i)(j)))
-        bboxMax(j) = min(clamp(j), max(bboxMax(j), pts(i)(j)))
+        bboxMin(j) = max(0, min(bboxMin(j), pts(i)(j).toInt))
+        bboxMax(j) = min(clamp(j), max(bboxMax(j), pts(i)(j).toInt))
       }
     }
     // p: Array[Int] = (x,y)

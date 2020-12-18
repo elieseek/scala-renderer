@@ -5,9 +5,13 @@ import javax.imageio.ImageIO
 import java.io.File
 import java.nio.Buffer
 
+import Utility.MathUtil
+
 object Image {
   def writePixel(image: BufferedImage, x: Int, y: Int, rgb: Array[Int]) {
-    image.setRGB(x, image.getHeight()-y-1, ((rgb(0)*65536) + (rgb(1)*256) + rgb(2)) & 0xffffff)
+    val u = MathUtil.clamp(x, 0, image.getWidth()-1)
+    val v = MathUtil.clamp(image.getHeight()-y, 0, image.getHeight()-1)
+    image.setRGB(u, v, ((rgb(0)*65536) + (rgb(1)*256) + rgb(2)) & 0xffffff)
   }
 
   def savePNG(image: BufferedImage) {

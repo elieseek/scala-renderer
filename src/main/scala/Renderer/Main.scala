@@ -20,18 +20,19 @@ object Main extends App {
   val model = new Model("head.obj")
   val rand = new Random(42)
   val lightDir = Vec3Util.normalise(Vec3(0.0,0.0,-1.0))
+  var zBuffer = Array.fill[Double](width*height)(Double.NegativeInfinity)
   for (face <- model.faces) {
-    var screenCoords: Array[Vec2] = Array(Vec2(), Vec2(), Vec2())
+    var screenCoords: Array[Vec3] = Array(Vec3(), Vec3(), Vec3())
     val worldCoords: Array[Vec3] = Array(Vec3(), Vec3(), Vec3())
     for (i <- 0 until 3) {
       val v = model.vert(face(i))
-      screenCoords(i) = Vec2(((v(0)+1.0)*width/2.0), ((v(1)+1.0)*height/2.0))
+      screenCoords(i) = Vec3(((v(0)+1.0)*width/2.0), ((v(1)+1.0)*height/2.0), v(2))
       worldCoords(i) = v
     }
     val n = Vec3Util.normalise(Vec3Util.cross(worldCoords(2)-worldCoords(0), worldCoords(1)-worldCoords(0)))
     val intensity = n.dot(lightDir)
     if (intensity > 0) {
-      Draw.triangle(screenCoords, image, Array(255, (sqrt(intensity)*255).toInt, (sqrt(intensity)*255).toInt, (sqrt(intensity)*255).toInt))
+      Draw.triangle(screenCoords,zBuffer, image, Array(255, (sqrt(intensity)*255).toInt, (sqrt(intensity)*255).toInt, (sqrt(intensity)*255).toInt))
     }
   }
   

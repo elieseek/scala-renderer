@@ -59,8 +59,7 @@ object Image {
       if (i >= width) i = width - 1
       if (j >= height) j = height - 1
 
-      val pixel = getARGB(i, j)
-      Array(pixel(0), pixel(1), pixel(2), pixel(3))
+      getARGB(i, j)
     }
   }
 }

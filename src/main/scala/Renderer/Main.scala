@@ -16,7 +16,7 @@ import utility.Vec3Util
 object Main extends App {
   val width = 750
   val height = 750
-  val image = new BufferedImage(width,height, BufferedImage.TYPE_INT_RGB)
+  val image = new BufferedImage(width,height, BufferedImage.TYPE_INT_ARGB)
   val model = new Model("head.obj")
   val rand = new Random(42)
   val lightDir = Vec3Util.normalise(Vec3(0.0,0.0,-1.0))
@@ -31,7 +31,7 @@ object Main extends App {
     val n = Vec3Util.normalise(Vec3Util.cross(worldCoords(2)-worldCoords(0), worldCoords(1)-worldCoords(0)))
     val intensity = n.dot(lightDir)
     if (intensity > 0) {
-      Draw.triangle(screenCoords, image, Array((sqrt(intensity)*255).toInt, (sqrt(intensity)*255).toInt, (sqrt(intensity)*255).toInt))
+      Draw.triangle(screenCoords, image, Array(255, (sqrt(intensity)*255).toInt, (sqrt(intensity)*255).toInt, (sqrt(intensity)*255).toInt))
     }
   }
   

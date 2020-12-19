@@ -3,6 +3,9 @@ package renderer
 import display.Image
 import debug.Timer
 import utility.MathUtil
+import utility.Vec3
+import utility.Vec2
+import utility.Vec3Util
 import scala.math.floorMod
 import java.awt.image.BufferedImage
 import javax.swing.ImageIcon
@@ -15,17 +18,17 @@ object Main extends App {
   val image = new BufferedImage(width,height, BufferedImage.TYPE_INT_RGB)
   val model = new Model("head.obj")
   val rand = new Random(42)
-  val lightDir = MathUtil.normalise(Array(0.0,0.0,-1.0))
+  val lightDir = Vec3Util.normalise(Vec3(0.0,0.0,-1.0))
   for (face <- model.faces) {
-    var screenCoords = Array.ofDim[Double](3,2)
-    val worldCoords = Array.ofDim[Double](3,2)
+    var screenCoords: Array[Vec2] = Array(Vec2(), Vec2(), Vec2())
+    val worldCoords: Array[Vec3] = Array(Vec3(), Vec3(), Vec3())
     for (i <- 0 until 3) {
       val v = model.vert(face(i))
-      screenCoords(i) = Array(((v(0)+1.0)*width/2.0), ((v(1)+1.0)*height/2.0))
+      screenCoords(i) = Vec2(((v(0)+1.0)*width/2.0), ((v(1)+1.0)*height/2.0))
       worldCoords(i) = v
     }
-    val n = MathUtil.normalise(MathUtil.crossProduct(MathUtil.subtract(worldCoords(2),worldCoords(0)), MathUtil.subtract(worldCoords(1),worldCoords(0))))
-    val intensity = MathUtil.dot(n, lightDir)
+    val n = Vec3Util.normalise(Vec3Util.cross(worldCoords(2)-worldCoords(0), worldCoords(1)-worldCoords(0)))
+    val intensity = n.dot(lightDir)
     if (intensity > 0) {
       Draw.triangle(screenCoords, image, Array((sqrt(intensity)*255).toInt, (sqrt(intensity)*255).toInt, (sqrt(intensity)*255).toInt))
     }

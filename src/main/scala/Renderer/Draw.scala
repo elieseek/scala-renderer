@@ -6,6 +6,8 @@ import scala.math.max
 import scala.math.min
 
 import display.Image
+import utility.Vec3
+import utility.Vec2
 import java.awt.Color
 
 object Draw {
@@ -50,7 +52,7 @@ object Draw {
       }
     }
   }
-  def triangle(pts: Array[Array[Double]], image: BufferedImage, colour: Array[Int]) = {
+  def triangle(pts: Array[Vec2], image: BufferedImage, colour: Array[Int]) = {
     var bboxMin = Array(image.getWidth()-1, image.getHeight()-1)
     var bboxMax = Array(0,0)
     var clamp = Array(image.getWidth()-1, image.getHeight()-1)

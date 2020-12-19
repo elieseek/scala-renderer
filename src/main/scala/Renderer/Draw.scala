@@ -53,7 +53,7 @@ object Draw {
       }
     }
   }
-  def triangle(pts: Array[Vec3], zBuffer: Array[Double], image: BufferedImage, colour: Array[Int]) = {
+  def triangle(pts: Array[Vec3], textPts: Array[Vec3], zBuffer: Array[Double], image: BufferedImage, model: Model, intensity: Double) = {
     var bboxMin = Array(image.getWidth()-1, image.getHeight()-1)
     var bboxMax = Array(0,0)
     var clamp = Array(image.getWidth()-1, image.getHeight()-1)
@@ -63,17 +63,25 @@ object Draw {
         bboxMax(j) = min(clamp(j), max(bboxMax(j), pts(i)(j).toInt))
       }
     }
-    // p: Array[Int] = (x,y)
+    
     for (x <- bboxMin(0) to bboxMax(0)) {
       for (y <- bboxMin(1) to bboxMax(1)) {
         val bcScreen = Compute.barycentric(pts, Array(x, y, 0))
         if (bcScreen(0)>=0 && bcScreen(1)>=0 && bcScreen(2)>=0 ) {
           val width = image.getWidth()
           var z: Int = 0
-          for (i <- 0 until 3) {z += (pts(i)(2)*bcScreen(i)).toInt}
+          var textureInterp = Vec3()
+          for (i <- 0 until 3) {
+            z += (pts(i)(2)*bcScreen(i)).toInt
+            textureInterp += textPts(i) * bcScreen(i)
+          }
+          val diffuse: Image.FastRGB = model.diffuse
+          val diffHeight = diffuse.height
+          val diffWidth = diffuse.width
+          val colour = diffuse.value(textureInterp(0), textureInterp(1))
           if (zBuffer((x+y*width).toInt) < z) {
             zBuffer(x+y*width) = z
-            Image.writePixel(image, x, y, colour)
+            Image.writePixel(image, x, y, Array(colour(0), (intensity*colour(1)).toInt, (intensity*colour(2)).toInt, (intensity*colour(3)).toInt))
           }
         }
       }

@@ -1,9 +1,10 @@
 package display
 
 import scala.swing._
-import display.Image
 import java.awt.image.BufferedImage
 import javax.swing.ImageIcon
+
+import display.Image
 
 class Window(width: Int, height: Int) extends MainFrame {
   var image = new BufferedImage(width,height,BufferedImage.TYPE_INT_RGB)

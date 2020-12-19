@@ -1,6 +1,7 @@
 package renderer
 
 import java.awt.image.BufferedImage
+import java.awt.Color
 import scala.math.abs
 import scala.math.max
 import scala.math.min
@@ -8,7 +9,7 @@ import scala.math.min
 import display.Image
 import utility.Vec3
 import utility.Vec2
-import java.awt.Color
+
 
 object Draw {
   def line(x0: Int, y0: Int, x1: Int, y1: Int, image: BufferedImage, colour: Array[Int]) {

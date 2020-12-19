@@ -1,7 +1,8 @@
 package utility
 
 import scala.math.sqrt
-import MathUtil.clamp
+
+import utility.MathUtil.clamp
 
 class Vec3 {
   var x = 0.0

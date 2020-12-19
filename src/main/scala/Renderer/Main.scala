@@ -1,16 +1,17 @@
 package renderer
 
+import java.awt.image.BufferedImage
+import javax.swing.ImageIcon
+import scala.math.floorMod
+import scala.util.Random
+import scala.math.sqrt
+
 import display.Image
 import debug.Timer
 import utility.MathUtil
 import utility.Vec3
 import utility.Vec2
 import utility.Vec3Util
-import scala.math.floorMod
-import java.awt.image.BufferedImage
-import javax.swing.ImageIcon
-import scala.util.Random
-import scala.math.sqrt
 
 object Main extends App {
   val width = 750

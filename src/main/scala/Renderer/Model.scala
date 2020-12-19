@@ -2,6 +2,7 @@ package renderer
 
 import scala.collection.mutable.ArrayBuffer
 import scala.io.Source
+
 import utility.Vec3
 
 class Model(filename: String) {

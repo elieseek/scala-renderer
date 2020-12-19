@@ -1,4 +1,4 @@
-package Renderer
+package renderer
 
 import scala.collection.mutable.ArrayBuffer
 import scala.io.Source

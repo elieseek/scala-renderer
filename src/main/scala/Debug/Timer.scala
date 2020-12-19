@@ -1,4 +1,4 @@
-package Debug
+package debug
 
 object Timer {
   // https://stackoverflow.com/questions/9160001/how-to-profile-methods-in-scala

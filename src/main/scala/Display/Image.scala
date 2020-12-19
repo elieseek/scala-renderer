@@ -1,11 +1,11 @@
-package Display
+package display
 
 import java.awt.image.BufferedImage
 import javax.imageio.ImageIO
 import java.io.File
 import java.nio.Buffer
 
-import Utility.MathUtil
+import utility.MathUtil
 
 object Image {
   def writePixel(image: BufferedImage, x: Int, y: Int, rgb: Array[Int]) {

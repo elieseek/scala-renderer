@@ -1,11 +1,11 @@
-package Renderer
+package renderer
 
 import java.awt.image.BufferedImage
 import scala.math.abs
 import scala.math.max
 import scala.math.min
 
-import Display.Image
+import display.Image
 import java.awt.Color
 
 object Draw {

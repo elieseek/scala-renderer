@@ -1,8 +1,8 @@
-package Renderer
+package renderer
 
 import scala.math.abs
 
-import Utility.MathUtil
+import utility.MathUtil
 
 object Compute {
   def barycentric(pts: Array[Array[Double]], p: Array[Int]): Array[Double] = {

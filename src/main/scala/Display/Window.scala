@@ -1,7 +1,7 @@
-package Display
+package display
 
 import scala.swing._
-import Display.Image
+import display.Image
 import java.awt.image.BufferedImage
 import javax.swing.ImageIcon
 

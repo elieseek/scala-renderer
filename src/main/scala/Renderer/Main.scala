@@ -1,8 +1,8 @@
-package Renderer
+package renderer
 
-import Display.Image
-import Debug.Timer
-import Utility.MathUtil
+import display.Image
+import debug.Timer
+import utility.MathUtil
 import scala.math.floorMod
 import java.awt.image.BufferedImage
 import javax.swing.ImageIcon
@@ -31,6 +31,6 @@ object Main extends App {
     }
   }
   
-  val viewer = new Display.Window(width,height)
+  val viewer = new display.Window(width,height)
   viewer.setImage(image)
 }

@@ -83,7 +83,7 @@ object Draw {
           val colour = diffuse.value(textureInterp(0), textureInterp(1))
           if (zBuffer((x+y*width).toInt) < z) {
             zBuffer(x+y*width) = z
-            Image.writePixel(image, x, y, Array(colour(0), (intensity*colour(1)).toInt, (intensity*colour(2)).toInt, (intensity*colour(3)).toInt))
+            Image.writePixel(image, x, y, Array((intensity*colour(1)).toInt, (intensity*colour(2)).toInt, (intensity*colour(3)).toInt))
           }
         }
       }

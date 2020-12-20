@@ -18,7 +18,7 @@ import utility.Vec3Util
 object Main extends App {
   val width = 750
   val height = 750
-  val image = new BufferedImage(width,height, BufferedImage.TYPE_INT_ARGB)
+  val image = new BufferedImage(width,height, BufferedImage.TYPE_INT_RGB)
   val model = new Model("head.obj", "/african_head_diffuse.png")
 
   val lightDir = Vec3Util.normalise(Vec3(0.0,0.0,-1.0))

@@ -9,10 +9,10 @@ import java.nio.Buffer
 import utility.MathUtil
 
 object Image {
-  def writePixel(image: BufferedImage, x: Int, y: Int, argb: Array[Int]) {
+  def writePixel(image: BufferedImage, x: Int, y: Int, rgb: Array[Int]) {
     val u = MathUtil.clamp(x, 0, image.getWidth()-1)
     val v = MathUtil.clamp(image.getHeight()-y, 0, image.getHeight()-1)
-    image.setRGB(u, v, (argb(0) << 24) | (argb(1) << 16) | (argb(2) << 8) | argb(3)) // (alpha << 24) | (red << 16 ) | (green<<8) | blue
+    image.setRGB(u, v, (rgb(0) << 16) | (rgb(1) << 8) | rgb(2)) // (alpha << 24) | (red << 16 ) | (green<<8) | blue
   }
 
   def savePNG(image: BufferedImage) {

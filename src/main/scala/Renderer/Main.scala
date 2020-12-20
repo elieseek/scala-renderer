@@ -21,8 +21,9 @@ object Main extends App {
   val image = new BufferedImage(width,height, BufferedImage.TYPE_INT_RGB)
   val model = new Model("head.obj", "/african_head_diffuse.png")
 
-  val lightDir = Vec3Util.normalise(Vec3(0.0,0.0,-1.0))
-  val cameraPos = Vec3(0, 0, 4)
+  val lightDir = Vec3Util.normalise(Vec3(0.0,0.0, -1.0))
+  val cameraPos = Vec3(0, 0, 3)
+  val viewDir = Vec3Util.normalise(cameraPos*(-1))
   val viewport = CameraUtil.viewport(width/8, height/8, width*3/4, height*3/4)
   val projectionMatrix = CameraUtil.projectionMatrix(cameraPos.z)
 
@@ -39,8 +40,9 @@ object Main extends App {
       diffuseCoords(i) = vt
     }
     val n = Vec3Util.normalise(Vec3Util.cross(worldCoords(2)-worldCoords(0), worldCoords(1)-worldCoords(0)))
-    val intensity = n.dot(lightDir)
-    if (intensity > 0) {
+    val intensity = MathUtil.clamp(n.dot(lightDir), 0.0, 1.0)
+    val backFaceCheck = n.dot(viewDir)
+    if (backFaceCheck > 0 ) {
       Draw.triangle(screenCoords,diffuseCoords, zBuffer, image, model, intensity)
     }
   }

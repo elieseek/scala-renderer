@@ -9,6 +9,7 @@ import scala.math.min
 import display.Image
 import utility.Vec3
 import utility.Vec2
+import utility.Mat44
 
 
 object Draw {
@@ -75,6 +76,7 @@ object Draw {
             z += (pts(i)(2)*bcScreen(i)).toInt
             textureInterp += textPts(i) * bcScreen(i)
           }
+
           val diffuse: Image.FastRGB = model.diffuse
           val diffHeight = diffuse.height
           val diffWidth = diffuse.width

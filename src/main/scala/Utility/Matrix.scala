@@ -135,6 +135,154 @@ class Mat44 {
   def setElement(i: Int, j: Int, el: Double) = {
     this.values(i)(j) = el
   }
+
+  // Ugly but efficient
+  def inverse(): Mat44 = {
+    var detMat = Mat44()
+    detMat.setElement(0, 0, 
+    this(1, 1) * this(2, 2) * this(3, 3) - 
+    this(1, 1) * this(2, 3) * this(3, 2) - 
+    this(2, 1) * this(1, 2) * this(3, 3) + 
+    this(2, 1) * this(1, 3) * this(3, 2) + 
+    this(3, 1) * this(1, 2) * this (2, 3) - 
+    this(3, 1) * this(1, 3) * this(2, 2)
+    )
+    detMat.setElement(1, 0, 
+    -this(1, 0) * this(2, 2) * this(3, 3) + 
+    this(1, 0) * this(2, 3) * this(3, 2) + 
+    this(2, 0) * this(1, 2) * this(3, 3) - 
+    this(2, 0) * this(1, 3) * this(3, 2) - 
+    this(3, 0) * this(1, 2) * this (2, 3) + 
+    this(3, 0) * this(1, 3) * this(2, 2)
+    )
+    detMat.setElement(2, 0, 
+    this(1, 0) * this(2, 1) * this(3, 3) - 
+    this(1, 0) * this(2, 3) * this(3, 1) - 
+    this(2, 0) * this(1, 1) * this(3, 3) + 
+    this(2, 0) * this(1, 3) * this(3, 1) + 
+    this(3, 0) * this(1, 1) * this (2, 3) - 
+    this(3, 0) * this(1, 3) * this(2, 1)
+    )
+    detMat.setElement(3, 0, 
+    -this(1, 0) * this(2, 1) * this(3, 2) + 
+    this(1, 0) * this(2, 2) * this(3, 1) + 
+    this(2, 0) * this(1, 1) * this(3, 2) - 
+    this(2, 0) * this(1, 2) * this(3, 1) - 
+    this(3, 0) * this(1, 1) * this (2, 2) + 
+    this(3, 0) * this(1, 2) * this(2, 1)
+    )
+    detMat.setElement(0, 1, 
+    -this(0, 1) * this(2, 2) * this(3, 3) + 
+    this(0, 1) * this(2, 3) * this(3, 2) + 
+    this(2, 1) * this(0, 2) * this(3, 3) - 
+    this(2, 1) * this(0, 3) * this(3, 2) - 
+    this(3, 1) * this(0, 2) * this (2, 3) + 
+    this(3, 1) * this(0, 3) * this(2, 2)
+    )
+    detMat.setElement(1, 1, 
+    this(0, 0) * this(2, 2) * this(3, 3) - 
+    this(0, 0) * this(2, 3) * this(3, 2) - 
+    this(2, 0) * this(0, 2) * this(3, 3) + 
+    this(2, 0) * this(0, 3) * this(3, 2) + 
+    this(3, 0) * this(0, 2) * this (2, 3) - 
+    this(3, 0) * this(0, 3) * this(2, 2)
+    )
+    detMat.setElement(2, 1, 
+    -this(0, 0) * this(2, 1) * this(3, 3) + 
+    this(0, 0) * this(2, 3) * this(3, 1) + 
+    this(2, 0) * this(0, 1) * this(3, 3) - 
+    this(2, 0) * this(0, 3) * this(3, 1) - 
+    this(3, 0) * this(0, 1) * this (2, 3) + 
+    this(3, 0) * this(0, 3) * this(2, 1)
+    )
+    detMat.setElement(3, 1, 
+    this(0, 0) * this(2, 1) * this(3, 2) - 
+    this(0, 0) * this(2, 2) * this(3, 1) - 
+    this(2, 0) * this(0, 1) * this(3, 2) + 
+    this(2, 0) * this(0, 2) * this(3, 1) + 
+    this(3, 0) * this(0, 1) * this (2, 2) - 
+    this(3, 0) * this(0, 2) * this(2, 1)
+    )
+    detMat.setElement(0, 2, 
+    this(0, 1) * this(1, 2) * this(3, 3) - 
+    this(0, 1) * this(1, 3) * this(3, 2) - 
+    this(1, 1) * this(0, 2) * this(3, 3) + 
+    this(1, 1) * this(0, 3) * this(3, 2) + 
+    this(3, 1) * this(0, 2) * this (1, 3) - 
+    this(3, 1) * this(0, 3) * this(1, 2)
+    )
+    detMat.setElement(1, 2, 
+    -this(0, 0) * this(1, 2) * this(3, 3) + 
+    this(0, 0) * this(1, 3) * this(3, 2) + 
+    this(1, 0) * this(0, 2) * this(3, 3) - 
+    this(1, 0) * this(0, 3) * this(3, 2) - 
+    this(3, 0) * this(0, 2) * this (1, 3) + 
+    this(3, 0) * this(0, 3) * this(1, 2)
+    )
+    detMat.setElement(2, 2, 
+    this(0, 0) * this(1, 1) * this(3, 3) - 
+    this(0, 0) * this(1, 3) * this(3, 1) - 
+    this(1, 0) * this(0, 1) * this(3, 3) + 
+    this(1, 0) * this(0, 3) * this(3, 1) + 
+    this(3, 0) * this(0, 1) * this (1, 3) - 
+    this(3, 0) * this(0, 3) * this(1, 1)
+    )
+    detMat.setElement(3, 2, 
+    -this(0, 0) * this(1, 1) * this(3, 2) + 
+    this(0, 0) * this(1, 2) * this(3, 1) + 
+    this(1, 0) * this(0, 1) * this(3, 2) - 
+    this(1, 0) * this(0, 2) * this(3, 1) - 
+    this(3, 0) * this(0, 1) * this (1, 2) + 
+    this(3, 0) * this(0, 2) * this(1, 1)
+    )
+    detMat.setElement(0, 3, 
+    -this(0, 1) * this(1, 2) * this(2, 3) + 
+    this(0, 1) * this(1, 3) * this(2, 2) + 
+    this(1, 1) * this(0, 2) * this(2, 3) - 
+    this(1, 1) * this(0, 3) * this(2, 2) - 
+    this(2, 1) * this(0, 2) * this (1, 3) + 
+    this(2, 1) * this(0, 3) * this(1, 2)
+    )
+    detMat.setElement(1, 3, 
+    this(0, 0) * this(1, 2) * this(2, 3) -
+    this(0, 0) * this(1, 3) * this(2, 2) - 
+    this(1, 0) * this(0, 2) * this(2, 3) + 
+    this(1, 0) * this(0, 3) * this(2, 2) + 
+    this(2, 0) * this(0, 2) * this (1, 3) - 
+    this(2, 0) * this(0, 3) * this(1, 2)
+    )
+    detMat.setElement(2, 3, 
+    -this(0, 0) * this(1, 1) * this(2, 3) +
+    this(0, 0) * this(1, 3) * this(2, 1) + 
+    this(1, 0) * this(0, 1) * this(2, 3) - 
+    this(1, 0) * this(0, 3) * this(2, 1) - 
+    this(2, 0) * this(0, 1) * this (1, 3) + 
+    this(2, 0) * this(0, 3) * this(1, 1)
+    )
+    detMat.setElement(3, 3, 
+    this(0, 0) * this(1, 1) * this(2, 2) -
+    this(0, 0) * this(1, 2) * this(2, 1) - 
+    this(1, 0) * this(0, 1) * this(2, 2) + 
+    this(1, 0) * this(0, 2) * this(2, 1) + 
+    this(2, 0) * this(0, 1) * this (1, 3) - 
+    this(2, 0) * this(0, 2) * this(1, 1)
+    )
+
+    var det = this(0, 0) * detMat(0, 0) + this(0, 1) * detMat(1, 0) + this(0, 2) * detMat(2, 0) + this(0, 3) * detMat(3, 0) 
+    if (det == 0) {
+      throw new IllegalArgumentException("Matrix has no inverse")
+      Mat44()
+    } else {
+      var inverse = Mat44()
+      det = 1.0 / det
+      for (i <- 0 until 4) {
+        for (j <- 0 until 4) {
+          inverse.setElement(i, j, detMat(i, j) * det)
+        }
+      }
+      inverse
+    }
+  }
 }
 
 object Mat44 {
@@ -145,6 +293,14 @@ object Mat44 {
     val mat = new Mat44
     mat.values = array
     mat
+  }
+  def identity() = {
+    Mat44(Array(
+      Array(1.0, 0.0,0.0,0.0),
+      Array(0.0,1.0,0.0,0.0),
+      Array(0.0,0.0,1.0,0.0),
+      Array(0.0,0.0,0.0,1.0)
+    ))
   }
 
 }

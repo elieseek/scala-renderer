@@ -14,6 +14,12 @@ import utility.Vec._
 import utility.Mat44
 import utility.Vec
 
+import java.awt.event.KeyAdapter
+import java.awt.event.KeyEvent
+import java.awt.event.MouseAdapter
+import java.awt.event.MouseEvent
+import java.awt.Point
+
 object Main extends App {
   var width = 750
   var height = 750
@@ -23,25 +29,48 @@ object Main extends App {
   val model = new Model("head.obj", "/african_head_diffuse.png")
 
   
-  val cameraPos = Vec3(0, 0, 3)
-  val viewDir = Vec3Util.normalise(cameraPos*(-1))
-  val camera = new Camera(cameraPos, viewDir, width, height)
+  val cameraPos = Vec3(4, 2, 3)
+  val centre = Vec3(0, 0, 0)
+  val camera = new Camera(cameraPos, centre, width, height)
 
-  
   val viewer = new display.LiveWindow(width,height)
   viewer.start()
-  var i = 0
+  var fps = 0
+  var frames = 0
+  var totalTime: Long = 0
+  var curTime = System.nanoTime()
+  var lastTime = curTime
+
+  var startPos: Point = new Point()
+  viewer.canvas.addMouseListener(new MouseAdapter() {
+    override def mousePressed(e: MouseEvent): Unit = {
+      startPos = e.getPoint()
+    }
+  })
+  viewer.canvas.addMouseMotionListener(new MouseAdapter() {
+    override def mouseDragged(e: MouseEvent) = {
+      val currentPos = e.getPoint()
+      val vector = List(currentPos.x - startPos.x, currentPos.y - startPos.y)
+      println("movement vector: " + vector.toString())
+    }
+  })
+
   while (true) {
      do {
-      val startTime = System.nanoTime()
+      lastTime = curTime
+      curTime = System.nanoTime()
+      totalTime += curTime - lastTime
+      if ( totalTime >= 1000000000) {
+        totalTime -= 1000000000
+        fps = frames
+        frames = 0
+      }
+      frames += 1
       viewportWidth = viewer.getWidth()
       viewportHeight = viewer.getHeight()
       viewer.canvas.setSize(viewportWidth, viewportHeight)
-      //camera.updateCameraPos(Vec3(0,0,3 + sin(i)), Vec3Util.normalise(Vec3(0,0,3 + sin(i))*(-1)))
       image = new BufferedImage(width,height, BufferedImage.TYPE_INT_RGB)
-      i += 1
       Draw.renderFrame(model, camera, image)
-      val fps = (1000000000 / (System.nanoTime() - startTime)).toInt
       viewer.setFPS(fps)
       viewer.setFrame(image)
     } while (!viewer.buffer.contentsLost())

@@ -9,6 +9,8 @@ import display.Image
 import java.awt.image.BufferStrategy
 import java.awt.Graphics
 
+import utility.Vec._
+
 class Window(width: Int, height: Int) extends MainFrame {
   var image = new BufferedImage(width,height,BufferedImage.TYPE_INT_RGB)
 

@@ -11,6 +11,7 @@ class Model(modelName: String, textureName: String) {
   var verts = ArrayBuffer[Vec3]()
   var faces = ArrayBuffer[Array[Array[Int]]]()
   var textVerts = ArrayBuffer[Vec3]()
+  var normVerts = ArrayBuffer[Vec3]()
   var diffuse = new FastRGB(Image.readPNG(textureName))
 
   val bufferedSource = Source.fromResource(modelName)
@@ -21,9 +22,12 @@ class Model(modelName: String, textureName: String) {
     } else if (line.startsWith("f ")) {
       var f: Array[Array[Int]] = line.drop(2).split(" ").map(x => x.split("/").map(y => y.toInt-1))
       faces += f
-    } else if (line.startsWith(("vt  "))) {
+    } else if (line.startsWith("vt  ")) {
       var vt: Vec3 = Vec3(line.drop(4).split(" ").map(x => x.toDouble))
       textVerts += vt
+    } else if (line.startsWith("vn  ")) {
+      var vn: Vec3 = Vec3(line.drop(4).split(" ").map(x => x.toDouble))
+      normVerts += vn
     }
   }
   //println("v: " + nVerts() + ", f: " + nFaces())
@@ -47,5 +51,9 @@ class Model(modelName: String, textureName: String) {
 
   def textVert(i: Int): Vec3 = {
     textVerts(i)
+  }
+
+  def normVert(i: Int): Vec3 = {
+    normVerts(i)
   }
 }

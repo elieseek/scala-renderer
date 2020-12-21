@@ -54,7 +54,7 @@ object Draw {
       }
     }
   }
-  def triangle(pts: Array[Vec3], textPts: Array[Vec3], zBuffer: Array[Double], image: BufferedImage, model: Model, intensity: Double) = {
+  def triangle(pts: Array[Vec3], textPts: Array[Vec3], zBuffer: Array[Double], image: BufferedImage, model: Model, intensities: Array[Double]) = {
     var bboxMin = Array(image.getWidth()-1, image.getHeight()-1)
     var bboxMax = Array(0,0)
     var clamp = Array(image.getWidth()-1, image.getHeight()-1)
@@ -65,6 +65,10 @@ object Draw {
       }
     }
     
+    val diffuse: Image.FastRGB = model.diffuse
+    val diffHeight = diffuse.height
+    val diffWidth = diffuse.width
+
     for (x <- bboxMin(0) to bboxMax(0)) {
       for (y <- bboxMin(1) to bboxMax(1)) {
         val bcScreen = Compute.barycentric(pts, Array(x, y, 0))
@@ -72,14 +76,12 @@ object Draw {
           val width = image.getWidth()
           var z: Int = 0
           var textureInterp = Vec3()
+          var intensity = 0.0
           for (i <- 0 until 3) {
             z += (pts(i)(2)*bcScreen(i)).toInt
             textureInterp += textPts(i) * bcScreen(i)
+            intensity += intensities(i) * bcScreen(i)
           }
-
-          val diffuse: Image.FastRGB = model.diffuse
-          val diffHeight = diffuse.height
-          val diffWidth = diffuse.width
           val colour = diffuse.value(textureInterp(0), textureInterp(1))
           val zbufferIndex = x+y*width
           if (zBuffer((zbufferIndex).toInt) < z) {
@@ -92,25 +94,29 @@ object Draw {
   }
 
   def renderFrame(model: Model, camera: Camera, image: BufferedImage) = {
-    val lightDir = Vec3Util.normalise(Vec3(0.0,0.0, -1.0))
+    val lightDir = Vec3(0.0,0.0, 1.0).normalise()
     var zBuffer = Array.fill[Double](camera.width*camera.height)(Double.NegativeInfinity)
-    val m = camera.viewport * camera.projectionMatrix
+    val m = camera.viewport * camera.projectionMatrix * camera.modelViewMatrix
+    val mInv = m.inverse()
     for (face <- model.faces) {
       var screenCoords: Array[Vec3] = Array.fill[Vec3](3)(Vec3())
       var worldCoords: Array[Vec3] = Array.fill[Vec3](3)(Vec3())
       var diffuseCoords: Array[Vec3] = Array.fill[Vec3](3)(Vec3())
+      var intensities: Array[Double] = Array.fill(3)(0.0)
       for (i <- 0 until 3) {
         val v = model.vert(face(i)(0))
         val vt = model.textVert(face(i)(1))
+        val vn = model.normVert(face(i)(2))
         screenCoords(i) = Vec4.augmentToVec3(m * Vec4.fromVec3(v))
         worldCoords(i) = v
         diffuseCoords(i) = vt
+        //val normal = Vec4.augmentToVec3(mInv * Vec4.fromVec3(vn))
+        intensities(i) = MathUtil.clamp(vn.dot(lightDir), 0.0, 1.0)
       }
       val n = Vec3Util.normalise(Vec3Util.cross(worldCoords(2)-worldCoords(0), worldCoords(1)-worldCoords(0)))
-      val intensity = MathUtil.clamp(n.dot(lightDir), 0.0, 1.0)
       val backFaceCheck = n.dot(camera.viewDir)
       if (backFaceCheck > 0) {
-        Draw.triangle(screenCoords,diffuseCoords, zBuffer, image, model, intensity)
+        Draw.triangle(screenCoords,diffuseCoords, zBuffer, image, model, intensities)
       }
     }
   }

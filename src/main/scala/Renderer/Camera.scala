@@ -1,9 +1,27 @@
 package renderer
 
 import utility.Mat44
+import utility.Vec._
 
-object Camera {
+class Camera(pos: Vec3, dir: Vec3, w: Int, h: Int) {
+  var cameraPos = pos
+  var viewDir = dir
+  var width = w
+  var height = h
+  var viewport = CameraUtil.viewport(width/8, height/8, width*3/4, height*3/4)
+  var projectionMatrix = CameraUtil.projectionMatrix(cameraPos.z)
 
+  def updateCameraPos(pos: Vec3, dir: Vec3) = {
+    cameraPos = pos
+    viewDir = dir
+    projectionMatrix = CameraUtil.projectionMatrix(cameraPos.z)
+  }
+
+  def updateViewport(w: Int, h: Int) = {
+    width = w
+    height = h
+    viewport = CameraUtil.viewport(width/8, height/8, width*3/4, height*3/4)
+  }
 }
 
 object CameraUtil {

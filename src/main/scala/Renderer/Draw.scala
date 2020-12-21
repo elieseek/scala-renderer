@@ -9,7 +9,8 @@ import scala.math.min
 import display.Image
 import utility.Vec._
 import utility.Mat44
-
+import renderer.Camera
+import utility.MathUtil
 
 object Draw {
   def line(x0: Int, y0: Int, x1: Int, y1: Int, image: BufferedImage, colour: Array[Int]) {
@@ -80,11 +81,36 @@ object Draw {
           val diffHeight = diffuse.height
           val diffWidth = diffuse.width
           val colour = diffuse.value(textureInterp(0), textureInterp(1))
-          if (zBuffer((x+y*width).toInt) < z) {
-            zBuffer(x+y*width) = z
+          val zbufferIndex = x+y*width
+          if (zBuffer((zbufferIndex).toInt) < z) {
+            zBuffer(zbufferIndex) = z
             Image.writePixel(image, x, y, Array((intensity*colour(1)).toInt, (intensity*colour(2)).toInt, (intensity*colour(3)).toInt))
           }
         }
+      }
+    }
+  }
+
+  def renderFrame(model: Model, camera: Camera, image: BufferedImage) = {
+    val lightDir = Vec3Util.normalise(Vec3(0.0,0.0, -1.0))
+    var zBuffer = Array.fill[Double](camera.width*camera.height)(Double.NegativeInfinity)
+    val m = camera.viewport * camera.projectionMatrix
+    for (face <- model.faces) {
+      var screenCoords: Array[Vec3] = Array.fill[Vec3](3)(Vec3())
+      var worldCoords: Array[Vec3] = Array.fill[Vec3](3)(Vec3())
+      var diffuseCoords: Array[Vec3] = Array.fill[Vec3](3)(Vec3())
+      for (i <- 0 until 3) {
+        val v = model.vert(face(i)(0))
+        val vt = model.textVert(face(i)(1))
+        screenCoords(i) = Vec4.augmentToVec3(m * Vec4.fromVec3(v))
+        worldCoords(i) = v
+        diffuseCoords(i) = vt
+      }
+      val n = Vec3Util.normalise(Vec3Util.cross(worldCoords(2)-worldCoords(0), worldCoords(1)-worldCoords(0)))
+      val intensity = MathUtil.clamp(n.dot(lightDir), 0.0, 1.0)
+      val backFaceCheck = n.dot(camera.viewDir)
+      if (backFaceCheck > 0) {
+        Draw.triangle(screenCoords,diffuseCoords, zBuffer, image, model, intensity)
       }
     }
   }

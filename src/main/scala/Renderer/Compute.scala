@@ -2,9 +2,7 @@ package renderer
 
 import scala.math.abs
 
-import utility.Vec3Util
-import utility.Vec3
-import utility.Vec2
+import utility.Vec._
 
 object Compute {
   def barycentric(pts: Array[Vec3], p: Array[Int]): Vec3 = {

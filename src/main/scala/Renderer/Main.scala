@@ -9,11 +9,8 @@ import scala.math.sqrt
 import display.Image
 import debug.Timer
 import utility.MathUtil
-import utility.Vec3
-import utility.Vec2
-import utility.Vec4
+import utility.Vec._
 import utility.Mat44
-import utility.Vec3Util
 
 object Main extends App {
   val width = 750
@@ -42,7 +39,7 @@ object Main extends App {
     val n = Vec3Util.normalise(Vec3Util.cross(worldCoords(2)-worldCoords(0), worldCoords(1)-worldCoords(0)))
     val intensity = MathUtil.clamp(n.dot(lightDir), 0.0, 1.0)
     val backFaceCheck = n.dot(viewDir)
-    if (backFaceCheck > 0 ) {
+    if (backFaceCheck > 0) {
       Draw.triangle(screenCoords,diffuseCoords, zBuffer, image, model, intensity)
     }
   }

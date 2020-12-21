@@ -3,7 +3,7 @@ package renderer
 import scala.collection.mutable.ArrayBuffer
 import scala.io.Source
 
-import utility.Vec3
+import utility.Vec._
 import display.Image
 import display.Image.FastRGB
 

@@ -7,8 +7,7 @@ import scala.math.max
 import scala.math.min
 
 import display.Image
-import utility.Vec3
-import utility.Vec2
+import utility.Vec._
 import utility.Mat44
 
 

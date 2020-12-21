@@ -1,5 +1,7 @@
 package utility
 
+import Vec._
+
 class Mat33 {
   var values = Array.ofDim[Double](3,3)
 

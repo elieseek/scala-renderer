@@ -35,6 +35,10 @@ object Vec {
       case 2 => this.z = j
     }
 
+    def normalise() = {
+      this / this.length()
+    }
+
     def length(): Double = sqrt(lengthSquared())
 
     def lengthSquared(): Double = this.dot(this)
@@ -134,7 +138,6 @@ object Vec {
 
   }
 
-  //----
   class Vec4 {
     var x = 0.0
     var y = 0.0

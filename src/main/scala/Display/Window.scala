@@ -80,7 +80,7 @@ class LiveWindow(w: Int, h: Int) extends JFrame {
   this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
 
   def start() = {
-    canvas.createBufferStrategy(2)
+    canvas.createBufferStrategy(3)
     buffer = canvas.getBufferStrategy()
   }
 

@@ -19,6 +19,7 @@ import java.awt.event.KeyEvent
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import java.awt.Point
+import java.awt.RenderingHints.Key
 
 object Main extends App {
   var width = 750
@@ -27,11 +28,12 @@ object Main extends App {
   var viewportHeight = height
   var image = new BufferedImage(width,height, BufferedImage.TYPE_INT_RGB)
   val model = new Model("head.obj", "/african_head_diffuse.png")
-
+  val shader = new GourandShader(model)
   
   val cameraPos = Vec3(4, 2, 3)
-  val centre = Vec3(0, 0, 0)
+  val centre = Vec3(0, 0.0, 0)
   val camera = new Camera(cameraPos, centre, width, height)
+  val scene = new Scene(Vec3(0, 0, 1))
 
   val viewer = new display.LiveWindow(width,height)
   viewer.start()
@@ -41,19 +43,7 @@ object Main extends App {
   var curTime = System.nanoTime()
   var lastTime = curTime
 
-  var startPos: Point = new Point()
-  viewer.canvas.addMouseListener(new MouseAdapter() {
-    override def mousePressed(e: MouseEvent): Unit = {
-      startPos = e.getPoint()
-    }
-  })
-  viewer.canvas.addMouseMotionListener(new MouseAdapter() {
-    override def mouseDragged(e: MouseEvent) = {
-      val currentPos = e.getPoint()
-      val vector = List(currentPos.x - startPos.x, currentPos.y - startPos.y)
-      println("movement vector: " + vector.toString())
-    }
-  })
+  viewer.requestFocusInWindow()
 
   while (true) {
      do {
@@ -70,9 +60,11 @@ object Main extends App {
       viewportHeight = viewer.getHeight()
       viewer.canvas.setSize(viewportWidth, viewportHeight)
       image = new BufferedImage(width,height, BufferedImage.TYPE_INT_RGB)
-      Draw.renderFrame(model, camera, image)
+      Draw.renderFrame(model,shader, scene, camera, image)
       viewer.setFPS(fps)
       viewer.setFrame(image)
-    } while (!viewer.buffer.contentsLost())
+    } while (viewer.buffer.contentsLost())
   }
+  viewer.dispose()
+  System.exit(0)
 }

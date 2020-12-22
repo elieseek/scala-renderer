@@ -209,5 +209,9 @@ object Vec {
     def augmentToVec3(v: Vec4) = {
       Vec3(Array(v.x/v.w, v.y/v.w, v.z/v.w))
     }
+
+    def projToVec3(v: Vec4) = {
+      Vec3(v.x, v.y, v.z)
+    }
   }
 }

@@ -75,7 +75,7 @@ object Mat33 {
 
 }
 
-class Mat44 {
+case class Mat44() {
   var values = Array.ofDim[Double](4,4)
 
   def +(that: Mat44) = {
@@ -296,7 +296,7 @@ object Mat44 {
   }
   def identity() = {
     Mat44(Array(
-      Array(1.0, 0.0,0.0,0.0),
+      Array(1.0,0.0,0.0,0.0),
       Array(0.0,1.0,0.0,0.0),
       Array(0.0,0.0,1.0,0.0),
       Array(0.0,0.0,0.0,1.0)

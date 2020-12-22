@@ -7,6 +7,7 @@ import java.io.File
 import java.nio.Buffer
 
 import utility.MathUtil
+import utility.Vec._
 
 object Image {
   def writePixel(image: BufferedImage, x: Int, y: Int, rgb: Array[Int]) {
@@ -49,6 +50,18 @@ object Image {
       argb
     }
 
+    def getRGBasVec3(x: Int, y: Int): Vec3 = {
+      var pos = (y * pixelLength * width) + (x * pixelLength)
+      var rgb = Vec3()
+      rgb(2) = (pixels(pos) & 0xff).toInt // Blue
+      pos += 1
+      rgb(1) = (pixels(pos) & 0xff).toInt // Green
+      pos += 1
+      rgb(0) = (pixels(pos) & 0xff).toInt // Red
+      pos += 1
+      rgb
+    }
+
     def value(u: Double, v: Double) = {
       val cu = MathUtil.clamp(u, 0.0, 1.0)
       val cv = 1.0 - MathUtil.clamp(v, 0.0, 1.0) //flip V image coordinates
@@ -60,6 +73,19 @@ object Image {
       if (j >= height) j = height - 1
 
       getARGB(i, j)
+    }
+
+    def valueAsVec(u: Double, v: Double) = {
+      val cu = MathUtil.clamp(u, 0.0, 1.0)
+      val cv = 1.0 - MathUtil.clamp(v, 0.0, 1.0) //flip V image coordinates
+
+      var i = (cu * width).toInt
+      var j = (cv * height).toInt
+
+      if (i >= width) i = width - 1
+      if (j >= height) j = height - 1
+
+      getRGBasVec3(i, j)
     }
   }
 }

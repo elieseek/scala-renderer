@@ -54,7 +54,10 @@ object Draw {
       }
     }
   }
-  def triangle(pts: Array[Vec4], shader: Shader, zBuffer: Array[Double], image: BufferedImage) = {
+  
+
+  def triangle(distortedPts: Array[Vec4], shader: Shader, zBuffer: Array[Double], image: BufferedImage, camera: Camera) = {
+    val pts = distortedPts.map(v => v/v(3))
     var bboxMin = Array(image.getWidth()-1, image.getHeight()-1)
     var bboxMax = Array(0,0)
     var clamp = Array(image.getWidth()-1, image.getHeight()-1)
@@ -89,11 +92,11 @@ object Draw {
     for (f <- 0 until model.nFaces) {
       var screenCoords: Array[Vec4] = Array.fill[Vec4](3)(Vec4())
       for (i <- 0 until 3) {
-        screenCoords(i) = shader.vertex(f, i, scene, camera)
+        screenCoords(i) = shader.vertex(f, i)
       }
       val n = Vec3Util.cross(model.vert(f, 2)-model.vert(f, 0), model.vert(f, 1)-model.vert(f, 0))
       if (n.dot(camera.viewDir) > 1e-5) {
-        Draw.triangle(screenCoords,shader, zBuffer, image)
+        Draw.triangle(screenCoords,shader, zBuffer, image, camera)
       }
     }
   }

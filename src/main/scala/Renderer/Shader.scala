@@ -6,31 +6,48 @@ import utility.Vec._
 import utility.Mat44
 
 abstract class Shader {
-  def vertex(iFace: Int, nthVer: Int, scene: Scene, camera: Camera): Vec4
+  def vertex(iFace: Int, nthVer: Int): Vec4
   def fragment(bar: Vec3): Option[Array[Double]]
 }
 
 class GourandShader(model: Model) extends Shader {
   var varyingIntensity = Vec3()
-  var textCoords = Array(Vec3(), Vec3(), Vec3())
-  var viewDir = Vec3()
+  var uniformLightDir = Vec3()
+  var uniformM = Mat44()
+  var uniformViewport = Mat44()
 
-  def vertex(iFace: Int, nthVer: Int, scene: Scene, camera: Camera): Vec4 = {
-    varyingIntensity(nthVer) = max(0.0, model.normal(iFace, nthVer).dot(scene.lightDir))
-    textCoords(nthVer) = model.textVert(iFace, nthVer)
-    viewDir = camera.viewDir
+  def vertex(iFace: Int, nthVer: Int): Vec4 = {
+    varyingIntensity(nthVer) = max(0.0, model.normal(iFace, nthVer).dot(uniformLightDir))
     val glVertex = Vec4.fromVec3(model.vert(iFace, nthVer))
-    camera.viewport * camera.projectionMatrix * camera.modelViewMatrix * glVertex
+    uniformViewport * uniformM * glVertex
   }
 
   def fragment(bar: Vec3): Option[Array[Double]] = {
     val intensity = varyingIntensity.dot(bar)
-    var textureCoords = Vec3()
-    for (i <- 0 until 3) {
-      textureCoords += textCoords(i) * bar(i)
-    }
-    val colour = model.diffuse.value(textureCoords(0), textureCoords(1))
-    Some(Array(colour(0), colour(1)*intensity, colour(2)*intensity, colour(3)*intensity))
-  
+    Some(Array(255,255*intensity, 255*intensity, 255*intensity))
+  }
+}
+
+class TextureShader(model: Model) extends Shader {
+  var varyingUV = Array.fill(3)(Vec2())
+  var uniformM = Mat44()
+  var uniformMIT = Mat44()
+  var uniformLightDir = Vec3()
+  var uniformViewport = Mat44()
+
+  def vertex(iFace: Int, nthVer: Int): Vec4 = {
+    varyingUV(nthVer) = model.textVert(iFace, nthVer)
+    val glVertex = Vec4.fromVec3(model.vert(iFace, nthVer))
+    uniformViewport * uniformM * glVertex
+  }
+
+  def fragment(bar: Vec3): Option[Array[Double]] = {
+    var uv = Vec2()
+    for (i <- 0 until 3) {uv += varyingUV(i)*bar(i)}
+    val n = (Vec4.projToVec3(uniformMIT * Vec4.fromVec3(model.normalFromMap(uv(0).toInt, uv(1).toInt)))).normalise()
+    val l = (Vec4.projToVec3(uniformM * Vec4.fromVec3(uniformLightDir))).normalise()
+    val intensity = max(0.0, n.dot(l))
+    val colour = model.diffuse.value(uv.x, uv.y)
+    Some(Array(colour(0),colour(1)*intensity, colour(2)*intensity, colour(3)*intensity))
   }
 }

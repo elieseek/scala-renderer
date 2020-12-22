@@ -36,7 +36,7 @@ class Camera(pos: Vec3, lookAt: Vec3, w: Int, h: Int) {
 
 object CameraUtil {
   def viewport(x: Double, y: Double, w: Double, h: Double, depth: Double = 255.0) = {
-    val m = Mat44.identity()
+    var m = Mat44.identity()
     m.setElement(0, 3, x+w/2.0)
     m.setElement(1, 3, y+h/2.0)
     m.setElement(2, 3, depth/2.0)
@@ -47,7 +47,7 @@ object CameraUtil {
     m
   }
   def projectionMatrix(c: Double) = {
-    val proj = Mat44.identity()
+    var proj = Mat44.identity()
     proj.setElement(3, 2 , -1.0/c)
     proj
   }
@@ -56,15 +56,14 @@ object CameraUtil {
     val x = Vec3Util.cross(up, z).normalise()
     val y = Vec3Util.cross(z, x).normalise()
 
-    var mInv = Mat44.identity()
-    var tr = Mat44.identity()
+    var modelView = Mat44.identity()
 
     for (i <- 0 until 3) {
-      mInv.setElement(0, i, x(i))
-      mInv.setElement(1, i, y(i))
-      mInv.setElement(2, i, z(i))
-      tr.setElement(i, 3, -centre(i))
+      modelView.setElement(0, i, x(i))
+      modelView.setElement(1, i, y(i))
+      modelView.setElement(2, i, z(i))
+      modelView.setElement(i, 3, -centre(i))
     }
-    mInv * tr
+    modelView
   }
 }

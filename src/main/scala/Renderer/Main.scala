@@ -27,14 +27,14 @@ object Main extends App {
   var viewportWidth = width
   var viewportHeight = height
   var image = new BufferedImage(width,height, BufferedImage.TYPE_INT_RGB)
-  val model = new Model("head.obj", "/african_head_diffuse.png", "/african_head_nm_tangent.png")
+  val model = new Model("head.obj", "/african_head_diffuse.png", "/african_head_nm.png")
   
-  val cameraPos = Vec3(2.0, 2.0, 3.0)
+  val cameraPos = Vec3(0, 0, 3.0)
   val centre = Vec3(0.0, 0.0, 0.0)
   val camera = new Camera(cameraPos, centre, width, height)
-  val scene = new Scene(Vec3(0, 0, 1))
+  val scene = new Scene(Vec3(1, 0, 0).normalise())
 
-  val shader = new TextureShader(model)
+  val shader = new NMShader(model)
   shader.uniformM = camera.projectionMatrix * camera.modelViewMatrix
   shader.uniformMIT = ((camera.projectionMatrix * camera.modelViewMatrix)).inverse().transpose()
   shader.uniformLightDir = scene.lightDir

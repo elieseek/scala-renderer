@@ -58,9 +58,9 @@ class Model(modelName: String, textureName: String, normalName: String) {
     normVerts(face(f)(v)(2))
   }
 
-  def normalFromMap(x: Int, y: Int) = {
+  def normalFromMap(x: Double, y: Double): Vec3 = {
     // Transforms (0, 1) -> (-1, 1)
-    val normal = normalMap.getRGBasVec3(x, y) / 255.0
+    val normal = normalMap.valueAsVec(x, y) / 255.0
     (normal * 2.0 - Vec3(1.0, 1.0, 1.0)).normalise()
   }
 }

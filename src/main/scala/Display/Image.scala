@@ -53,6 +53,9 @@ object Image {
     def getRGBasVec3(x: Int, y: Int): Vec3 = {
       var pos = (y * pixelLength * width) + (x * pixelLength)
       var rgb = Vec3()
+      if (hasAlphaChannel) {
+        pos += 1
+      }
       rgb(2) = (pixels(pos) & 0xff).toInt // Blue
       pos += 1
       rgb(1) = (pixels(pos) & 0xff).toInt // Green

@@ -174,6 +174,10 @@ object Vec {
     def length(): Double = sqrt(lengthSquared())
 
     def lengthSquared(): Double = this.dot(this)
+
+    def normalise() = {
+      this / this.length()
+    }
   }
 
   object Vec4 {

@@ -10,7 +10,7 @@ abstract class Shader {
   def fragment(bar: Vec3): Option[Array[Double]]
 }
 
-class GourandShader(model: Model) extends Shader {
+class GouraudShader(model: Model) extends Shader {
   var varyingIntensity = Vec3()
   var uniformLightDir = Vec3()
   var uniformM = Mat44()

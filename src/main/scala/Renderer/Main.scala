@@ -34,9 +34,9 @@ object Main extends App {
   val camera = new Camera(cameraPos, centre, width, height)
   val scene = new Scene(Vec3(1, 0, 0).normalise())
 
-  val shader = new NMShader(model)
+  val shader = new GouraudShader(model)
   shader.uniformM = camera.projectionMatrix * camera.modelViewMatrix
-  shader.uniformMIT = ((camera.projectionMatrix * camera.modelViewMatrix)).inverse().transpose()
+  //shader.uniformMIT = ((camera.projectionMatrix * camera.modelViewMatrix)).inverse().transpose()
   shader.uniformLightDir = scene.lightDir
   shader.uniformViewport = camera.viewport
 

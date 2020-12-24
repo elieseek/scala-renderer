@@ -13,7 +13,7 @@ import debug.Timer
 import utility.MathUtil
 import utility.Vec._
 import utility.Vec.VecUtil._
-import utility.Mat44
+import utility.Mat4
 import utility.Vec
 
 import java.awt.event.KeyAdapter
@@ -24,10 +24,6 @@ import java.awt.Point
 import java.awt.RenderingHints.Key
 
 object Main extends App {
-  val test = (Vec3(1, 0, 0) - Vec3(0, 0, 8)).length
-  println(test)
-
-
   var width = 750
   var height = 750
   var viewportWidth = width

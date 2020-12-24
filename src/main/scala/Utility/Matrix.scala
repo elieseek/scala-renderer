@@ -2,11 +2,11 @@ package utility
 
 import Vec._
 
-class Mat33 {
+case class Mat3() {
   var values = Array.ofDim[Double](3,3)
 
-  def +(that: Mat33) = {
-    var result = Mat33()
+  def +(that: Mat3) = {
+    var result = Mat3()
     for (i <- 0 until 3) {
       for (j <- 0 until 3) {
         result.setElement(i, j, that(i, j) + this(i, j)) 
@@ -15,8 +15,8 @@ class Mat33 {
     result
   }
 
-  def *(that: Mat33) = {
-    var result = Mat33()
+  def *(that: Mat3) = {
+    var result = Mat3()
     for (i <- 0 until 3) {
       for (j <- 0 until 3) {
         val sumProd = this(i, 0)*that(0, j) + this(i, 1)*that(1, j) + this(i, 2)*that(2 ,j)
@@ -27,7 +27,7 @@ class Mat33 {
   }
 
   def *(t: Double) = {
-    var result = Mat33()
+    var result = Mat3()
     for (i <- 0 until 3) {
       for (j <- 0 until 3) {
         result.setElement(i, j, this(i, j)*t) 
@@ -45,7 +45,7 @@ class Mat33 {
   }
   
   def transpose() = {
-    var result = Mat33()
+    var result = Mat3()
     for (i <- 0 until 3) {
       for (j <- 0 until 3) {
         result.setElement(i, j, this(j, i)) 
@@ -57,29 +57,53 @@ class Mat33 {
   def apply(i: Int, j: Int) = {
     this.values(i)(j)
   }
+  def update(i: Int, j: Int, k: Double) = {
+    this.values(i)(j) = k
+  }
 
   def setElement(i: Int, j: Int, el: Double) = {
     this.values(i)(j) = el
   }
+  
+  def inverse() = {
+    val det = {
+      this(0,0) * (this(1,1)*this(2,2) - this(2,1)*this(1,2)) -
+      this(0,1) * (this(1,0)*this(2,2) - this(1,2)*this(2,0)) +
+      this(0,2) * (this(1,0)*this(2,1) - this(1,1)*this(2,0))
+    }
+    val invdet = 1.0/det
+
+    var res = Mat3()
+    res(0,0) = (this(1,1)*this(2,2)-this(2,1)*this(1,2)) * invdet
+    res(0,1) = (this(0,2)*this(2,1)-this(0,1)*this(2,2)) * invdet
+    res(0,2) = (this(0,1)*this(1,2)-this(0,2)*this(1,1)) * invdet
+    res(1,0) = (this(1,2)*this(2,0)-this(1,0)*this(2,2)) * invdet
+    res(1,1) = (this(0,0)*this(2,2)-this(0,2)*this(2,0)) * invdet
+    res(1,2) = (this(1,0)*this(0,2)-this(0,0)*this(1,2)) * invdet
+    res(2,0) = (this(1,0)*this(2,1)-this(2,0)*this(1,1)) * invdet
+    res(2,1) = (this(2,0)*this(0,1)-this(0,0)*this(2,1)) * invdet
+    res(2,2) = (this(0,0)*this(1,1)-this(1,0)*this(0,1)) * invdet
+    res
+  }
 }
 
-object Mat33 {
+object Mat3 {
   def apply() = {
-    new Mat33
+    new Mat3
   }
   def apply(array: Array[Array[Double]]) = {
-    val mat = new Mat33
+    val mat = new Mat3
     mat.values = array
     mat
   }
 
 }
 
-case class Mat44() {
+case class Mat4() {
   var values = Array.ofDim[Double](4,4)
 
-  def +(that: Mat44) = {
-    var result = Mat44()
+  def +(that: Mat4) = {
+    var result = Mat4()
     for (i <- 0 until 4) {
       for (j <- 0 until 4) {
         result.setElement(i, j, that(i, j) + this(i, j)) 
@@ -88,8 +112,8 @@ case class Mat44() {
     result
   }
 
-  def *(that: Mat44) = {
-    var result = Mat44()
+  def *(that: Mat4) = {
+    var result = Mat4()
     for (i <- 0 until 4) {
       for (j <- 0 until 4) {
         var sumProd = 0.0
@@ -101,7 +125,7 @@ case class Mat44() {
   }
 
   def *(t: Double) = {
-    var result = Mat44()
+    var result = Mat4()
     for (i <- 0 until 4) {
       for (j <- 0 until 4) {
         result.setElement(i, j, this(i, j)*t) 
@@ -119,7 +143,7 @@ case class Mat44() {
   }
   
   def transpose() = {
-    var result = Mat44()
+    var result = Mat4()
     for (i <- 0 until 4) {
       for (j <- 0 until 4) {
         result.setElement(i, j, this(j, i)) 
@@ -137,8 +161,8 @@ case class Mat44() {
   }
 
   // Ugly but efficient
-  def inverse(): Mat44 = {
-    var detMat = Mat44()
+  def inverse(): Mat4 = {
+    var detMat = Mat4()
     detMat.setElement(0, 0, 
     this(1, 1) * this(2, 2) * this(3, 3) - 
     this(1, 1) * this(2, 3) * this(3, 2) - 
@@ -270,10 +294,10 @@ case class Mat44() {
 
     var det = this(0, 0) * detMat(0, 0) + this(0, 1) * detMat(1, 0) + this(0, 2) * detMat(2, 0) + this(0, 3) * detMat(3, 0) 
     if (det == 0) {
-      throw new IllegalArgumentException("Matrix has no inverse")
-      Mat44()
+      throw new Exception("Matrix has no inverse")
+      Mat4()
     } else {
-      var inverse = Mat44()
+      var inverse = Mat4()
       det = 1.0 / det
       for (i <- 0 until 4) {
         for (j <- 0 until 4) {
@@ -285,17 +309,17 @@ case class Mat44() {
   }
 }
 
-object Mat44 {
+object Mat4 {
   def apply() = {
-    new Mat44
+    new Mat4
   }
   def apply(array: Array[Array[Double]]) = {
-    val mat = new Mat44
+    val mat = new Mat4
     mat.values = array
     mat
   }
   def identity() = {
-    Mat44(Array(
+    Mat4(Array(
       Array(1.0,0.0,0.0,0.0),
       Array(0.0,1.0,0.0,0.0),
       Array(0.0,0.0,1.0,0.0),

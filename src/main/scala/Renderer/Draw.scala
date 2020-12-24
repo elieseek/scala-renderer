@@ -9,7 +9,7 @@ import scala.math.min
 import display.Image
 import utility.Vec._
 import utility.Vec.VecUtil._
-import utility.Mat44
+import utility.Mat4
 import renderer.Camera
 import utility.MathUtil
 

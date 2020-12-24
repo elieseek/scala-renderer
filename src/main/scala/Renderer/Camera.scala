@@ -1,6 +1,6 @@
 package renderer
 
-import utility.Mat44
+import utility.Mat4
 import utility.Vec._
 import utility.Vec.VecUtil._
 
@@ -37,7 +37,7 @@ class Camera(pos: Vec3, lookAt: Vec3, w: Int, h: Int) {
 
 object CameraUtil {
   def viewport(x: Double, y: Double, w: Double, h: Double, depth: Double = 255.0) = {
-    var m = Mat44.identity()
+    var m = Mat4.identity()
     m.setElement(0, 3, x+w/2.0)
     m.setElement(1, 3, y+h/2.0)
     m.setElement(2, 3, depth/2.0)
@@ -48,7 +48,7 @@ object CameraUtil {
     m
   }
   def projectionMatrix(c: Double) = {
-    var proj = Mat44.identity()
+    var proj = Mat4.identity()
     proj.setElement(3, 2 , -1.0/c)
     proj
   }
@@ -57,7 +57,7 @@ object CameraUtil {
     val x = cross(up, z)
     val y = cross(z, x)
 
-    var modelView = Mat44.identity()
+    var modelView = Mat4.identity()
 
     for (i <- 0 until 3) {
       modelView.setElement(0, i, x(i))

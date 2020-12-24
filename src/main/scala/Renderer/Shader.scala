@@ -4,7 +4,7 @@ import scala.math.max
 
 import utility.Vec._
 import utility.Vec.VecUtil._
-import utility.Mat44
+import utility.Mat4
 
 abstract class Shader {
   def vertex(iFace: Int, nthVer: Int): Vec4
@@ -14,8 +14,8 @@ abstract class Shader {
 class GouraudShader(model: Model) extends Shader {
   var varyingIntensity = Vec3()
   var uniformLightDir = Vec3()
-  var uniformM = Mat44()
-  var uniformViewport = Mat44()
+  var uniformM = Mat4()
+  var uniformViewport = Mat4()
 
   def vertex(iFace: Int, nthVer: Int): Vec4 = {
     varyingIntensity(nthVer) = max(0.0, dot(model.normal(iFace, nthVer), uniformLightDir))
@@ -32,10 +32,10 @@ class GouraudShader(model: Model) extends Shader {
 class PhongShader(model: Model) extends Shader {
   var varyingUV = Array.ofDim[Vec2](3)
   var varyingNorm = Array.ofDim[Vec3](3)
-  var uniformM = Mat44()
-  var uniformMIT = Mat44()
+  var uniformM = Mat4()
+  var uniformMIT = Mat4()
   var uniformLightDir = Vec3()
-  var uniformViewport = Mat44()
+  var uniformViewport = Mat4()
 
   def vertex(iFace: Int, nthVer: Int): Vec4 = {
     varyingUV(nthVer) = model.textVert(iFace, nthVer)
@@ -62,10 +62,10 @@ class PhongShader(model: Model) extends Shader {
 
 class NMShader(model: Model) extends Shader {
   var varyingUV = Array.fill(3)(Vec2())
-  var uniformM = Mat44()
-  var uniformMIT = Mat44()
+  var uniformM = Mat4()
+  var uniformMIT = Mat4()
   var uniformLightDir = Vec3()
-  var uniformViewport = Mat44()
+  var uniformViewport = Mat4()
 
   def vertex(iFace: Int, nthVer: Int): Vec4 = {
     varyingUV(nthVer) = model.textVert(iFace, nthVer)

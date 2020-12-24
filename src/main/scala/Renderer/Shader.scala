@@ -19,7 +19,7 @@ class GouraudShader(model: Model) extends Shader {
 
   def vertex(iFace: Int, nthVer: Int): Vec4 = {
     varyingIntensity(nthVer) = max(0.0, dot(model.normal(iFace, nthVer), uniformLightDir))
-    val glVertex = embed(model.vert(iFace, nthVer), 1.0)
+    val glVertex = Vec4(model.vert(iFace, nthVer), 1.0)
     uniformViewport * uniformM * glVertex
   }
 
@@ -39,8 +39,8 @@ class PhongShader(model: Model) extends Shader {
 
   def vertex(iFace: Int, nthVer: Int): Vec4 = {
     varyingUV(nthVer) = model.textVert(iFace, nthVer)
-    varyingNorm(nthVer) = proj(uniformMIT * embed(model.normal(iFace, nthVer)))
-    val glVertex = embed(model.vert(iFace, nthVer))
+    varyingNorm(nthVer) = Vec3(uniformMIT * Vec4(model.normal(iFace, nthVer), 1.0))
+    val glVertex = Vec4(model.vert(iFace, nthVer), 1.0)
     uniformViewport * uniformM * glVertex
   }
 
@@ -53,7 +53,7 @@ class PhongShader(model: Model) extends Shader {
     }
     //val n = (Vec4.projToVec3(uniformMIT * Vec4.fromVec3(model.normalFromMap(uv(0).toInt, uv(1).toInt)))).normalise()
     n = normalise(n)
-    val l = normalise(proj(uniformM * embed(uniformLightDir)))
+    val l = normalise(Vec3(uniformM * Vec4(uniformLightDir, 1.0)))
     val intensity = max(0.0, dot(n, l))
     val colour = model.diffuse.value(uv.x, uv.y)
     Some(Array(colour(0),colour(1)*intensity, colour(2)*intensity, colour(3)*intensity))
@@ -69,15 +69,15 @@ class NMShader(model: Model) extends Shader {
 
   def vertex(iFace: Int, nthVer: Int): Vec4 = {
     varyingUV(nthVer) = model.textVert(iFace, nthVer)
-    val glVertex = embed(model.vert(iFace, nthVer))
+    val glVertex = Vec4(model.vert(iFace, nthVer), 1.0)
     uniformViewport * uniformM * glVertex
   }
 
   def fragment(bar: Vec3): Option[Array[Double]] = {
     var uv = Vec2()
     for (i <- 0 until 3) {uv += varyingUV(i)*bar(i)}
-    val n = normalise(proj(uniformMIT * embed(model.normalFromMap(uv.x, uv.y))))
-    val l = normalise(proj(uniformM * embed(uniformLightDir)))
+    val n = normalise(Vec3(uniformMIT * Vec4(model.normalFromMap(uv.x, uv.y), 1.0)))
+    val l = normalise(Vec3(uniformM * Vec4(uniformLightDir, 1.0)))
     val intensity = max(0.0, dot(n, l))
     val colour = model.diffuse.value(uv.x, uv.y)
     Some(Array(colour(0),colour(1)*intensity, colour(2)*intensity, colour(3)*intensity))

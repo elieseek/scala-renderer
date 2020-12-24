@@ -53,6 +53,13 @@ object Vec {
       v.z = z
       v
     }
+    def apply(u: Vec4) = {
+      val v = new Vec3()
+      v.x = u.x
+      v.y = u.y
+      v.z = u.z
+      v
+    }
     def apply() = {
       new Vec3
     }
@@ -159,6 +166,14 @@ object Vec {
       v.w = w
       v
     }
+    def apply(u: Vec3, x: Double) = {
+      val v = new Vec4()
+      v.x = u.x
+      v.y = u.y
+      v.z = u.z
+      v.w = x
+      v
+    }
     def apply() = {
       new Vec4
     }
@@ -181,15 +196,6 @@ object Vec {
 
     def normalise(v: Vec2) = v / v.length
     def normalise(v: Vec3) = v / v.length
-    def normalise(v: Vec4) = v / v.length
-
-    def proj(v: Vec4): Vec3 = {
-      Vec3(v(0), v(1), v(2))
-    }
-
-    def embed(v: Vec3, x: Double = 1.0): Vec4 = {
-      Vec4(v(0), v(1), v(2), x)
-    }
-    
+    def normalise(v: Vec4) = v / v.length  
   }
 }

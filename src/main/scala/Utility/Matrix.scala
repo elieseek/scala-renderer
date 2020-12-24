@@ -52,6 +52,10 @@ case class Mat3() {
       }
     }
     result
+  } 
+
+  def col(i: Int) = {
+    Vec3(this(0, i), this(1, i), this(2, i))
   }
 
   def apply(i: Int, j: Int) = {
@@ -59,6 +63,11 @@ case class Mat3() {
   }
   def update(i: Int, j: Int, k: Double) = {
     this.values(i)(j) = k
+  }
+  def update(i: Int, v: Vec3) = {
+    this.values(0)(i) = v(0)
+    this.values(1)(i) = v(1)
+    this.values(2)(i) = v(2)
   }
 
   def setElement(i: Int, j: Int, el: Double) = {
@@ -161,11 +170,21 @@ case class Mat4() {
     result
   }
 
+  def col(i: Int) = {
+    Vec4(this(0, i), this(1, i), this(2, i), this(3, i))
+  }
+
   def apply(i: Int, j: Int) = {
     this.values(i)(j)
   }
   def update(i: Int, j: Int, k: Double) = {
     this.values(i)(j) = k
+  }
+  def update(i: Int, v: Vec4) = {
+    this.values(0)(i) = v(0)
+    this.values(1)(i) = v(1)
+    this.values(2)(i) = v(2)
+    this.values(3)(i) = v(3)
   }
 
   def setElement(i: Int, j: Int, el: Double) = {

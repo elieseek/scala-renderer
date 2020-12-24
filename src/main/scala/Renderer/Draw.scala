@@ -8,6 +8,7 @@ import scala.math.min
 
 import display.Image
 import utility.Vec._
+import utility.Vec.VecUtil._
 import utility.Mat44
 import renderer.Camera
 import utility.MathUtil
@@ -94,8 +95,8 @@ object Draw {
       for (i <- 0 until 3) {
         screenCoords(i) = shader.vertex(f, i)
       }
-      val n = Vec3Util.cross(model.vert(f, 2)-model.vert(f, 0), model.vert(f, 1)-model.vert(f, 0))
-      if (n.dot(camera.viewDir) > 1e-5) {
+      val n = cross(model.vert(f, 2)-model.vert(f, 0), model.vert(f, 1)-model.vert(f, 0))
+      if (dot(n, camera.viewDir) > 1e-5) {
         Draw.triangle(screenCoords,shader, zBuffer, image, camera)
       }
     }

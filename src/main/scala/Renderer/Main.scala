@@ -6,11 +6,13 @@ import scala.math.floorMod
 import scala.util.Random
 import scala.math.sqrt
 import scala.math.sin
+import scala.math.cos
 
 import display.Image
 import debug.Timer
 import utility.MathUtil
 import utility.Vec._
+import utility.Vec.VecUtil._
 import utility.Mat44
 import utility.Vec
 
@@ -22,6 +24,10 @@ import java.awt.Point
 import java.awt.RenderingHints.Key
 
 object Main extends App {
+  val test = (Vec3(1, 0, 0) - Vec3(0, 0, 8)).length
+  println(test)
+
+
   var width = 750
   var height = 750
   var viewportWidth = width
@@ -32,11 +38,11 @@ object Main extends App {
   val cameraPos = Vec3(0, 0, 3.0)
   val centre = Vec3(0.0, 0.0, 0.0)
   val camera = new Camera(cameraPos, centre, width, height)
-  val scene = new Scene(Vec3(1, 0, 0).normalise())
+  val scene = new Scene(normalise(Vec3(1, 0, 0)))
 
-  val shader = new GouraudShader(model)
+  val shader = new NMShader(model)
   shader.uniformM = camera.projectionMatrix * camera.modelViewMatrix
-  //shader.uniformMIT = ((camera.projectionMatrix * camera.modelViewMatrix)).inverse().transpose()
+  shader.uniformMIT = (shader.uniformM).inverse().transpose()
   shader.uniformLightDir = scene.lightDir
   shader.uniformViewport = camera.viewport
 
@@ -49,7 +55,7 @@ object Main extends App {
   var lastTime = curTime
 
   viewer.requestFocusInWindow()
-
+  var i: Double = 0.0
   while (true) {
      do {
       lastTime = curTime
@@ -61,6 +67,11 @@ object Main extends App {
         frames = 0
       }
       frames += 1
+      shader.uniformLightDir = Vec3(sin(1+i/15.0), 0, cos(1+ i/15.0))
+      camera.updateCameraPos(Vec3(3*sin(i/15), 0, 3*cos(i/15)), Vec3(0, 0, 0))
+      shader.uniformM = camera.projectionMatrix * camera.modelViewMatrix
+      shader.uniformMIT = (shader.uniformM).inverse().transpose()
+      shader.uniformViewport = camera.viewport
       viewportWidth = viewer.getWidth()
       viewportHeight = viewer.getHeight()
       viewer.canvas.setSize(viewportWidth, viewportHeight)
@@ -68,6 +79,7 @@ object Main extends App {
       Draw.renderFrame(model,shader, scene, camera, image)
       viewer.setFPS(fps)
       viewer.setFrame(image)
+      i += 1
     } while (viewer.buffer.contentsLost())
   }
   viewer.dispose()

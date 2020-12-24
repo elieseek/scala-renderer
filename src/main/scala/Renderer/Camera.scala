@@ -2,12 +2,13 @@ package renderer
 
 import utility.Mat44
 import utility.Vec._
+import utility.Vec.VecUtil._
 
 class Camera(pos: Vec3, lookAt: Vec3, w: Int, h: Int) {
   var cameraPos = pos
   var centre = lookAt
-  var distance = (centre-cameraPos).length()
-  var viewDir = (centre-cameraPos).normalise()
+  var distance = (centre-cameraPos).length
+  var viewDir = normalise(centre-cameraPos)
   var width = w
   var height = h
   var viewport = CameraUtil.viewport(width/8, height/8, width*3/4, height*3/4)
@@ -17,8 +18,8 @@ class Camera(pos: Vec3, lookAt: Vec3, w: Int, h: Int) {
   def updateCameraPos(pos: Vec3, lookAt: Vec3) = {
     cameraPos = pos
     centre = lookAt
-    viewDir = (centre-cameraPos).normalise()
-    distance = (cameraPos - centre).length()
+    viewDir = normalise(centre-cameraPos)
+    distance = (cameraPos - centre).length
     projectionMatrix = CameraUtil.projectionMatrix(distance)
     modelViewMatrix = CameraUtil.modelViewMatrix(cameraPos, centre, Vec3(0, 1, 0))
   }
@@ -52,9 +53,9 @@ object CameraUtil {
     proj
   }
   def modelViewMatrix(eye: Vec3, centre: Vec3, up: Vec3) = {
-    val z = (eye - centre).normalise()
-    val x = Vec3Util.cross(up, z).normalise()
-    val y = Vec3Util.cross(z, x).normalise()
+    val z = normalise(eye - centre)
+    val x = cross(up, z)
+    val y = cross(z, x)
 
     var modelView = Mat44.identity()
 

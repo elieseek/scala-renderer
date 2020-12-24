@@ -3,6 +3,7 @@ package renderer
 import scala.math.abs
 
 import utility.Vec._
+import utility.Vec.VecUtil._
 
 object Compute {
   def barycentric(pts: Array[Vec4], p: Array[Int]): Vec3 = {
@@ -11,7 +12,7 @@ object Compute {
       s(i) = Vec3(pts(2)(i) - pts(0)(i), pts(1)(i) - pts(0)(i), pts(0)(i) - p(i))
     }
     
-    val u = Vec3Util.cross(s(0), s(1))
+    val u = cross(s(0), s(1))
     if (abs(u(2)) > 1e-2) {
       Vec3(1.0 - (u(0)+u(1))/u(2), u(1)/u(2), u(0)/u(2))
     } else {

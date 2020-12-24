@@ -4,6 +4,7 @@ import scala.collection.mutable.ArrayBuffer
 import scala.io.Source
 
 import utility.Vec._
+import utility.Vec.VecUtil._
 import display.Image
 import display.Image.FastRGB
 
@@ -61,6 +62,6 @@ class Model(modelName: String, textureName: String, normalName: String) {
   def normalFromMap(x: Double, y: Double): Vec3 = {
     // Transforms (0, 1) -> (-1, 1)
     val normal = normalMap.valueAsVec(x, y) / 255.0
-    (normal * 2.0 - Vec3(1.0, 1.0, 1.0)).normalise()
+    normalise(normal * 2.0 - Vec3(1.0, 1.0, 1.0))
   }
 }

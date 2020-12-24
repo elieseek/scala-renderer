@@ -5,10 +5,12 @@ import scala.math.sqrt
 import utility.MathUtil.clamp
 
 object Vec {
+
   class Vec3 {
     var x = 0.0
     var y = 0.0
     var z = 0.0
+
     def +(that: Vec3) = Vec3(this.x + that.x, this.y + that.y, this.z + that.z)
 
     def -(that: Vec3) = Vec3(this.x - that.x, this.y - that.y, this.z - that.z)
@@ -18,10 +20,6 @@ object Vec {
     def *(that: Vec3) = Vec3(this.x * that.x, this.y * that.y, this.z * that.z)
 
     def /(t: Double) = Vec3(this.x / t, this.y / t, this.z / t)
-
-    def dot(that: Vec3) = {
-      this.x * that.x + this.y * that.y + this.z * that.z
-    }
     
     def apply(i: Int) = i match {
       case 0 => this.x
@@ -35,17 +33,12 @@ object Vec {
       case 2 => this.z = j
     }
 
-    def normalise() = {
-      this / this.length()
-    }
+    def length() = sqrt(lengthSquared())
 
-    def length(): Double = sqrt(lengthSquared())
-
-    def lengthSquared(): Double = this.dot(this)
-
+    def lengthSquared(): Double = x*x + y*y + z*z
   }
 
-  object Vec3 {
+  object Vec3{
     def apply(a: Array[Double]): Vec3 = {
       var v = new Vec3()
       v.x = a(0)
@@ -66,29 +59,10 @@ object Vec {
 
   }
 
-  object Vec3Util {
-    def dot(v: Vec3, u: Vec3) = v.x*u.x + v.y*u.y + v.z*u.z
-
-    def cross(v: Vec3, u: Vec3) = {
-      Vec3(
-        v.y * u.z - v.z * u.y,
-        v.z * u.x - v.x * u.z,
-        v.x * u.y - v.y * u.x
-      )
-    }
-
-    def sumElements(v: Vec3) = {
-      v.x + v.y + v.z
-    }
-
-    def clampVec3(v: Vec3, min: Double, max: Double) = Vec3(clamp(v.x, min, max), clamp(v.y, min, max), clamp(v.z, min, max))
-
-    def normalise(v: Vec3) = v / v.length
-  }
-
   class Vec2 {
     var x = 0.0
     var y = 0.0
+
     def +(that: Vec2) = Vec2(this.x + that.x, this.y + that.y)
 
     def -(that: Vec2) = Vec2(this.x - that.x, this.y - that.y)
@@ -98,10 +72,6 @@ object Vec {
     def *(that: Vec2) = Vec2(this.x * that.x, this.y * that.y)
 
     def /(t: Double) = Vec2(this.x / t, this.y / t)
-
-    def dot(that: Vec2) = {
-      this.x * that.x + this.y * that.y
-    }
 
     def apply(i: Int) = i match {
       case 0 => this.x
@@ -113,10 +83,9 @@ object Vec {
       case 1 => this.y = j
     }
 
-    def length(): Double = sqrt(lengthSquared())
-
-    def lengthSquared(): Double = this.dot(this)
-
+    def lengthSquared(): Double = x*x + y*y
+    
+    def length() = sqrt(lengthSquared())
   }
 
   object Vec2 {
@@ -143,6 +112,7 @@ object Vec {
     var y = 0.0
     var z = 0.0
     var w = 0.0
+    
     def +(that: Vec4) = Vec4(this.x + that.x, this.y + that.y, this.z + that.z, this.w + that.w)
 
     def -(that: Vec4) = Vec4(this.x - that.x, this.y - that.y, this.z - that.z,  this.w - that.w)
@@ -153,10 +123,6 @@ object Vec {
 
     def /(t: Double) = Vec4(this.x / t, this.y / t, this.z / t, this.w / t)
 
-    def dot(that: Vec4) = {
-      this.x * that.x + this.y * that.y + this.z * that.z + this.w * that.w
-    }
-    
     def apply(i: Int) = i match {
       case 0 => this.x
       case 1 => this.y
@@ -171,13 +137,9 @@ object Vec {
       case 3 => this.w = j
     }
 
-    def length(): Double = sqrt(lengthSquared())
+    def lengthSquared(): Double = x*x + y*y + z*z + w*w
 
-    def lengthSquared(): Double = this.dot(this)
-
-    def normalise() = {
-      this / this.length()
-    }
+    def length() = sqrt(lengthSquared())
   }
 
   object Vec4 {
@@ -200,22 +162,34 @@ object Vec {
     def apply() = {
       new Vec4
     }
+  }
 
-    def fromVec3(v: Vec3) = {
-      val res = new Vec4
-      res.x = v.x
-      res.y = v.y
-      res.z = v.z
-      res.w = 1.0
-      res
+  object VecUtil {
+    def dot(v: Vec2, u: Vec2) = v.x*u.x + v.y*u.y
+    def dot(v: Vec3, u: Vec3) = v.x*u.x + v.y*u.y + v.z*u.z
+    def dot(v: Vec4, u: Vec4) = v.x*u.x + v.y*u.y + v.z*u.z + v.w*u.w
+
+    def cross(v: Vec3, u: Vec3) = {
+      Vec3(
+        v.y * u.z - v.z * u.y,
+        v.z * u.x - v.x * u.z,
+        v.x * u.y - v.y * u.x
+      )
     }
 
-    def augmentToVec3(v: Vec4) = {
-      Vec3(Array(v.x/v.w, v.y/v.w, v.z/v.w))
+    def clampVec3(v: Vec3, min: Double, max: Double) = Vec3(clamp(v.x, min, max), clamp(v.y, min, max), clamp(v.z, min, max))
+
+    def normalise(v: Vec2) = v / v.length
+    def normalise(v: Vec3) = v / v.length
+    def normalise(v: Vec4) = v / v.length
+
+    def proj(v: Vec4): Vec3 = {
+      Vec3(v(0), v(1), v(2))
     }
 
-    def projToVec3(v: Vec4) = {
-      Vec3(v.x, v.y, v.z)
+    def embed(v: Vec3, x: Double = 1.0): Vec4 = {
+      Vec4(v(0), v(1), v(2), x)
     }
+    
   }
 }

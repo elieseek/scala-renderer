@@ -53,6 +53,13 @@ object Vec {
       v.z = z
       v
     }
+    def apply(u: Vec2, x: Double) = {
+      val v = new Vec3()
+      v.x = u.x
+      v.y = u.y
+      v.z = x
+      v
+    }
     def apply(u: Vec4) = {
       val v = new Vec3()
       v.x = u.x
@@ -194,8 +201,8 @@ object Vec {
 
     def clampVec3(v: Vec3, min: Double, max: Double) = Vec3(clamp(v.x, min, max), clamp(v.y, min, max), clamp(v.z, min, max))
 
-    def normalise(v: Vec2) = v / v.length
-    def normalise(v: Vec3) = v / v.length
-    def normalise(v: Vec4) = v / v.length  
+    def normalise(v: Vec2) = v / v.length()
+    def normalise(v: Vec3) = v / v.length()
+    def normalise(v: Vec4) = v / v.length () 
   }
 }

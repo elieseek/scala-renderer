@@ -91,7 +91,7 @@ object Draw {
   def renderFrame(model: Model, shader: Shader, scene: Scene, camera: Camera, image: BufferedImage) = {
     var zBuffer = Array.fill[Double](camera.width*camera.height)(Double.NegativeInfinity)
     for (f <- 0 until model.nFaces) {
-      var screenCoords: Array[Vec4] = Array.fill[Vec4](3)(Vec4())
+      var screenCoords: Array[Vec4] = Array.ofDim[Vec4](3)
       for (i <- 0 until 3) {
         screenCoords(i) = shader.vertex(f, i)
       }

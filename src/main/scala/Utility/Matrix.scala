@@ -75,13 +75,13 @@ case class Mat3() {
   }
   
   def inverse() = {
-    val det = {
+    val det: Double = {
       this(0,0) * (this(1,1)*this(2,2) - this(2,1)*this(1,2)) -
       this(0,1) * (this(1,0)*this(2,2) - this(1,2)*this(2,0)) +
       this(0,2) * (this(1,0)*this(2,1) - this(1,1)*this(2,0))
     }
     val invdet = 1.0/det
-
+    
     var res = Mat3()
     res(0,0) = (this(1,1)*this(2,2)-this(2,1)*this(1,2)) * invdet
     res(0,1) = (this(0,2)*this(2,1)-this(0,1)*this(2,2)) * invdet
@@ -114,6 +114,14 @@ object Mat3 {
       }
       i += 1
     }
+    mat
+  }
+  def identity() = {
+    Mat3(Array(
+      Array(1.0, 0.0, 0.0),
+      Array(0.0, 1.0, 0.0),
+      Array(0.0, 0.0, 1.0)
+    ))
   }
 }
 

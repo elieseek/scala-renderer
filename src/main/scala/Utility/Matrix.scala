@@ -96,7 +96,16 @@ object Mat3 {
     mat.values = array
     mat
   }
-
+  def apply(v1: Vec3, v2: Vec3, v3: Vec3) = {
+    val mat = new Mat3
+    var i = 0
+    for (v <- Array(v1, v2, v3)) {
+      for (j <- 0 until 3) {
+        mat(j, i) = v(j)
+      }
+      i += 1
+    }
+  }
 }
 
 case class Mat4() {
@@ -154,6 +163,9 @@ case class Mat4() {
 
   def apply(i: Int, j: Int) = {
     this.values(i)(j)
+  }
+  def update(i: Int, j: Int, k: Double) = {
+    this.values(i)(j) = k
   }
 
   def setElement(i: Int, j: Int, el: Double) = {
@@ -317,6 +329,16 @@ object Mat4 {
     val mat = new Mat4
     mat.values = array
     mat
+  }
+  def apply(v1: Vec4, v2: Vec4, v3: Vec4, v4: Vec4) = {
+    val mat = new Mat4
+    var i = 0
+    for (v <- Array(v1, v2, v3, v4)) {
+      for (j <- 0 until 4) {
+        mat(j, i) = v(j)
+      }
+      i += 1
+    }
   }
   def identity() = {
     Mat4(Array(

@@ -31,10 +31,10 @@ object Main extends App {
   var image = new BufferedImage(width,height, BufferedImage.TYPE_INT_RGB)
   val model = new Model("head.obj", "/african_head_diffuse.png", "/african_head_nm_tangent.png")
   
-  val cameraPos = Vec3(2, 0, 3.0)
+  val cameraPos = Vec3(0, 0, 3.0)
   val centre = Vec3(0.0, 0.0, 0.0)
   val camera = new Camera(cameraPos, centre, width, height)
-  val scene = new Scene(normalise(Vec3(3, 1, 3)))
+  val scene = new Scene(normalise(Vec3(1, 0, 0)))
 
   val shader = new TSMShader(model)
   shader.uniformM = camera.projectionMatrix * camera.modelViewMatrix
@@ -63,11 +63,11 @@ object Main extends App {
         frames = 0
       }
       frames += 1
-      // camera.updateCameraPos(Vec3(3*sin(i/15), 0, 3*cos(i/15)), Vec3(0, 0, 0))
-      // shader.uniformM = camera.projectionMatrix * camera.modelViewMatrix
-      // shader.uniformMIT = (shader.uniformM).inverse().transpose()
-      // shader.uniformLightDir = normalise(Vec3(shader.uniformMIT * Vec4(sin(1+i/15.0), 0, cos(1+ i/15.0), 1.0)))
-      // shader.uniformViewport = camera.viewport
+      camera.updateCameraPos(Vec3(3*sin(i/15), 0, 3*cos(i/15)), Vec3(0, 0, 0))
+      shader.uniformM = camera.projectionMatrix * camera.modelViewMatrix
+      shader.uniformMIT = (shader.uniformM).inverse().transpose()
+      shader.uniformLightDir = normalise(Vec3(shader.uniformMIT * Vec4(sin(1+i/15.0), 0, cos(1+ i/15.0), 0.0)))
+      shader.uniformViewport = camera.viewport
       viewportWidth = viewer.getWidth()
       viewportHeight = viewer.getHeight()
       viewer.canvas.setSize(viewportWidth, viewportHeight)

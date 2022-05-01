@@ -7,3 +7,4 @@ resources/
 metals.sbt
 .bloop
 .bsp
+null/
